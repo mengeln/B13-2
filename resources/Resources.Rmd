@@ -1,0 +1,11 @@
+### SOPs and Cheat Sheets
+
+* [qPCR SOP TaqEnviron CFX96](http://data.sccwrp.org/qpcr/resources/qPCR%20SOP_SCCWRP_Emm%20Ent%20Sketa_CFX96_20130819%20v1_1_final.pdf)
+* [qPCR SOP TaqEnviron CFX96 Cheat Sheet](http://data.sccwrp.org/qpcr/resources/qPCR%20SOP_SCCWRP_Emm%20Ent%20Sketa_CFX96_20130821%20v1_1%20final%20cheat%20sheet.pdf)
+* [qPCR SOP EMM HF183 OSTD2 Cheat Sheet](http://data.sccwrp.org/qpcr/resources/qPCR%20SOP_EMM_HF183%20OSTD2%2020130819%20v1_1%20final%20cheat%20sheet.pdf)
+* [qPCR SOP EMM HF183 OSTD2](http://data.sccwrp.org/qpcr/resources/Human%20MST%20SOP_May%202013.pdf)
+* <a href="http://data.sccwrp.org/qpcr/resources/TaqEnviron%20PCR%20setup%20Sheet%20Bight%2013%20V1_1.xlsx" target="_blank">TaqEnviron PCR setup sheet</a>
+
+### Example CFX input files
+
+* <a href="ent_sketa2.csv" target="_blank">CFX Entero TaqEnviron example</a>

@@ -1,0 +1,11 @@
+# Overview
+
+This tool is designed to take output from qPCR assay run on a Bio-Rad CFX96, ABI StepOnePlus, or ABI 7500 qPCR platform, perform automatic quality control assessment, and target concentration calculation (Enterococcus or HF183), and return all results in a QA/QC report. The quality control assessments include performance of standard curves, negative controls, and sample processing and inhibition flagging based on the salmon control assay (and/or the internal amplification control assay).
+
+In order to successfully analyze your data, you will need to do the following:
+
+1) Format your plate setup using your platform's software package. To do this, download the plate setup template provided here for your particular platform and assay. From the template, you should only need to enter the names of your samples to complete the plate setup.
+
+2) Export the results of the qPCR reaction from the Bio-Rad lab manager (or equivalent software on your qPCR platform) into a comma separated values (csv) format file
+
+3) Drag and drop the csv file over the front page of this tool (or use the browse and uploading function). Assuming there are no errors, you will then be able to view and download the results of the analysis. 

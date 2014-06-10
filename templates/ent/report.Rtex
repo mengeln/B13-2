@@ -1,0 +1,89 @@
+\documentclass{article}
+
+\usepackage{siunitx} % Provides the \SI{}{} command for typesetting SI units
+\usepackage{graphicx} % Required for the inclusion of images
+\usepackage[margin=1.0in]{geometry}
+\setlength\parindent{0pt} % Removes all indentation from paragraphs
+\renewcommand{\labelenumi}{\alph{enumi}.}
+
+
+\title{qPCR Report \\ Enterococcus TaqEnviron Assay \\ \rinline{results()$metadata["File Name"]}} % Title
+\date{\today} % Date for the report
+\author{}
+
+\begin{document}
+
+\maketitle
+
+\begin{center}
+\begin{tabular}{l r}
+Organization: \rinline{results()$org} \\
+Date Performed: \rinline{results()$metadata["Run Started"]} \\ % Date the experiment was performed
+Protocol: \rinline{results()$metadata["Protocol File Name"]} \\
+Sample Volume: \rinline{results()$metadata["Sample Vol"]} \si{\micro\litre}
+\end{tabular}
+\end{center}
+
+%----------------------------------------------------------------------------
+
+\section{Standard Curve QC Results}
+
+Both enterococcus and sketa standard curves must have an $r^2$ that is greater than \rinline{results()$r2.min},
+and an efficiency that is between \rinline{results()$eff.min} and \rinline{results()$eff.max}. \\
+
+%% begin.rcode echo=FALSE, results="asis"
+% print(xtable(results()$stdTable), include.rownames=FALSE, sanitize.text.function=function(x){x})
+%% end.rcode
+
+%----------------------------------------------------------------------------
+
+\section{NTC and NEC QC Results}
+
+Both the NTCs (qPCR blanks) and NECs (extraction blanks) must be non-detects. Detectable signals
+in any replicates will cause these tests to fail. \\
+
+%% begin.rcode echo=FALSE, results="asis"
+% print(xtable(results()$controlsDF), include.rownames=FALSE, sanitize.text.function=function(x){x})
+%% end.rcode
+
+%----------------------------------------------------------------------------
+\pagebreak
+\section{Sample Processing and Inhibition Control QC Results}
+
+The sketa calibrator internal control Ct on this plate was \rinline{results()$sk.calibrator}, with a standard deviation of \rinline{results()$calSD}. In order to pass,
+the difference between the mean sample sketa Ct ($\text{sketaCt}_{mean}$) and the calibrator Ct (i.e., $\Delta \text{Ct}_{mean}$)
+must be less than \rinline{results()$thres}. Note that the threshold level and pass/fail designations assume that the sample has not
+been diluted. \\
+
+Additionally, the mean sketa Ct in the NECs was \rinline{results()$NECmean}. A large difference between this value and the calibrator sketa would indicate some sort of problem.
+
+%% begin.rcode echo=FALSE, results="asis"
+% print(xtable(results()$calibratorQC), include.rownames=FALSE, sanitize.text.function=function(x){x})
+%% end.rcode
+
+%% begin.rcode echo=FALSE, results="asis"
+% print(xtable(results()$sketaDataTrim), include.rownames=FALSE, sanitize.text.function=function(x){x})
+%% end.rcode
+
+%----------------------------------------------------------------------------
+\pagebreak
+\section{Enterococcus Cell Equivalence Estimation}
+
+Cell equivalents (CE) per reaction is calculated using the $\Delta$Ct method, in which samples are compared to the calibrator
+in the following way:
+
+$$ \log_{10}{CE} = \frac{\Delta\text{Ct}_{samp, cal}}{slope} + \log_{10}{cal} $$
+
+where $slope$ is the slope of the enterococcus standard curve (\rinline{results()$ent.Slope} for this plate),
+$cal$ is the enterococcus calibrator expected CE, and
+$\Delta\text{Ct}_{samp, cal}$ is the difference in Ct between the mean of the calibrators and
+the sample. These values are then transformed to CE per filter (assumed to be 100 ml), and are reported below.
+Samples indicated to be inhibited by sketa controls are labeled as such. Uninhibited CE estimates that are below the detection
+limit (set to a Ct of \rinline{results()$m}) are denoted by ``ND''. Any detected inhibition among sample replicates causes the mean
+to be labeled as ``inhibited''. Remember that these CE estimates (both replicate and mean) are reported on a logarithmic scale.
+
+%% begin.rcode echo=FALSE, results="asis"
+% print(xtable(results()$resultsTrim2), scalebox = 0.93, include.rownames=FALSE, sanitize.text.function=function(x){x})
+%% end.rcode
+
+\end{document}
