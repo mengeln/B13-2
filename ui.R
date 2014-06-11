@@ -5,7 +5,7 @@ shinyUI(bootstrapPage(
   fluidRow(
     column(1),
     column(4, navlistPanel(tabPanel("Overview", includeMarkdown("resources/overview.Rmd")),
-                           tabPanel("Resources", includeMarkdown("resources/Resources.Rmd")),
+                           tabPanel("Resources", includeMarkdown("resources/resources.Rmd")),
                            tabPanel("Plate Setup", includeMarkdown("resources/plates.Rmd")))),
     column(3,
            radioButtons("Assay", "Choose assay:",

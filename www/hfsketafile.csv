@@ -1,0 +1,72 @@
+File Name,Day4 11-19-13 SC (OCSD).pcrd,,,,,
+Created By User,admin,,,,,
+Notes,,,,,,
+ID,,,,,,
+Run Started,11/19/2013 4:31:36 PM UTC -08:00,,,,,
+Run Ended,11/19/2013 6:04:35 PM UTC -08:00,,,,,
+Sample Vol,25,,,,,
+Lid Temp,105,,,,,
+Protocol File Name,SCCWRP Intercalibration Study.prcl,,,,,
+Plate Setup File Name,Day 4.pltd,,,,,
+Base Serial Number,CC011706,,,,,
+Optical Head Serial Number,785BR4308,,,,,
+CFX Manager Version,3.0.1216.0723. ,,,,,
+,,,,,,
+Well group,All Wells,,,,,
+Amplification step,3,,,,,
+Melt step,,,,,,
+,,,,,,
+,,,,,,
+Well,Fluor,Target,Content,Sample,Cq,Starting Quantity (SQ)
+A01,FAM,sketa,Unkn-01,Sew Spike1,22.22,3.57E+04
+A02,FAM,sketa,Unkn-01,Sew Spike1,22.65,2.68E+04
+A03,FAM,sketa,Unkn-01,Sew Spike1,22.7,2.60E+04
+A04,FAM,sketa,Unkn-02,Sew Spike2,22.8,2.42E+04
+A05,FAM,sketa,Unkn-02,Sew Spike2,22.41,3.15E+04
+A06,FAM,sketa,Unkn-02,Sew Spike2,22.39,3.18E+04
+A07,FAM,sketa,Unkn-03,Sew Spike3,26.36,2.26E+03
+A08,FAM,sketa,Unkn-03,Sew Spike3,26.06,2.76E+03
+A09,FAM,sketa,Unkn-03,Sew Spike3,25.83,3.22E+03
+A10,FAM,sketa,Unkn-04,Sew Spike4,25.22,4.81E+03
+A11,FAM,sketa,Unkn-04,Sew Spike4,24.99,5.61E+03
+A12,FAM,sketa,Unkn-04,Sew Spike4,26.24,2.45E+03
+B01,FAM,sketa,Unkn-05,Sew Spike5,30.18,1.77E+02
+B02,FAM,sketa,Unkn-05,Sew Spike5,30.17,1.78E+02
+B03,FAM,sketa,Unkn-05,Sew Spike5,30.12,1.83E+02
+B04,FAM,sketa,Unkn-06,Sew Spike6,29.84,2.21E+02
+B05,FAM,sketa,Unkn-06,Sew Spike6,29.79,2.29E+02
+B06,FAM,sketa,Unkn-06,Sew Spike6,30,1.98E+02
+B07,FAM,sketa,Neg Ctrl-07,NEC1,N/A,N/A
+B08,FAM,sketa,Neg Ctrl-07,NEC1,N/A,N/A
+B09,FAM,sketa,Neg Ctrl-07,NEC1,N/A,N/A
+B10,FAM,sketa,Neg Ctrl-08,NEC2,N/A,N/A
+B11,FAM,sketa,Neg Ctrl-08,NEC2,N/A,N/A
+B12,FAM,sketa,Neg Ctrl-08,NEC2,N/A,N/A
+F01,FAM,sketa,Unkn-07,Sew Spike7,21.58,5.48E+04
+F02,FAM,sketa,Unkn-07,Sew Spike7,21.39,6.20E+04
+F03,FAM,sketa,Unkn-07,Sew Spike7,21.52,5.71E+04
+F04,FAM,sketa,Unkn-08,Sew Spike8,21.53,5.67E+04
+F05,FAM,sketa,Unkn-08,Sew Spike8,21.42,6.07E+04
+F06,FAM,sketa,Unkn-08,Sew Spike8,21.39,6.21E+04
+F07,FAM,sketa,Unkn-09,Sew Spike9,21.82,4.66E+04
+F08,FAM,sketa,Unkn-09,Sew Spike9,21.43,6.03E+04
+F09,FAM,sketa,Unkn-09,Sew Spike9,21.43,6.06E+04
+F10,FAM,sketa,Unkn-10,Sew Spike10,21.43,6.06E+04
+F11,FAM,sketa,Unkn-10,Sew Spike10,21.61,5.36E+04
+F12,FAM,sketa,Unkn-10,Sew Spike10,21.57,5.50E+04
+G01,FAM,sketa,Unkn-11,Sew Spike11,22.12,3.81E+04
+G02,FAM,sketa,Unkn-11,Sew Spike11,21.92,4.35E+04
+G03,FAM,sketa,Unkn-11,Sew Spike11,22.01,4.10E+04
+G04,FAM,sketa,Unkn-12,Sew Spike12,21.9,4.43E+04
+G05,FAM,sketa,Unkn-12,Sew Spike12,21.9,4.42E+04
+G06,FAM,sketa,Unkn-12,Sew Spike12,21.93,4.34E+04
+G07,FAM,sketa,NTC-13,NEC 1,21.81,N/A
+G08,FAM,sketa,NTC-13,NEC 1,21.75,N/A
+G09,FAM,sketa,NTC-13,NEC 1,21.71,N/A
+G10,FAM,sketa,NTC-14,NEC 2,21.83,N/A
+G11,FAM,sketa,NTC-14,NEC 2,21.64,N/A
+G12,FAM,sketa,NTC-14,NEC 2,22.01,N/A
+H01,FAM,sketa,NTC-01,Sketa NTC,N/A,N/A
+H02,FAM,sketa,NTC-01,Sketa NTC,N/A,N/A
+H03,FAM,sketa,NTC-01,Sketa NTC,N/A,N/A
+

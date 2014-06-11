@@ -11,6 +11,7 @@ r2.min <- 0.98
 m <- 45  # Ct to assign to unamplified wells
 thres <- 1.7 # inhibition threshold
 
+`%nin%` <- Negate(`%in%`)
 
 abiToCfx <- function (abiFile) {
   data <- read.csv(abiFile , skip =8)

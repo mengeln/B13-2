@@ -10,7 +10,7 @@
 % options(warn=-1)
 % opts_chunk$set(warning=FALSE)
 %% end.rcode
-\title{qPCR Report \\ HF183 Assay  \\ \rinline{metadata["File Name"]}} % Title
+\title{qPCR Report \\ HF183 Assay  \\ \rinline{results()$metadata["File Name"]}} % Title
 \date{\today} % Date for the report
 \author{}
 
@@ -20,10 +20,10 @@
 
 \begin{center}
 \begin{tabular}{l r}
-Organization: \rinline{org} \\
-Date Performed: \rinline{metadata["Run Started"]} \\ % Date the experiment was performed
-Protocol: \rinline{metadata["Protocol File Name"]} \\
-Sample Volume: \rinline{metadata["Sample Vol"]} \si{\micro\litre} 
+Organization: \rinline{results()$org} \\
+Date Performed: \rinline{results()$metadata["Run Started"]} \\ % Date the experiment was performed
+Protocol: \rinline{results()$metadata["Protocol File Name"]} \\
+Sample Volume: \rinline{results()$metadata["Sample Vol"]} \si{\micro\litre} 
 \end{tabular}
 \end{center}
 
@@ -31,20 +31,13 @@ Sample Volume: \rinline{metadata["Sample Vol"]} \si{\micro\litre}
 
 \section{Standard Curve QC Results}
 
-The HF183 curve must have an $r^2$ that is greater than \rinline{r2.min},
-and an efficiency that is between \rinline{eff.min} and \rinline{eff.max}. \\
+The HF183 curve must have an $r^2$ that is greater than \rinline{results()$r2.min},
+and an efficiency that is between \rinline{results()$eff.min} and \rinline{results()$eff.max}. \\
 
 
-\begin{center}
-\begin{tabular}{c c c}
-\hline\hline 
-Measure & Result & Pass? \\ [0.5ex]
-\hline
-HF183 $r^2$ & \rinline{HF.r2} & \rinline{HF.StdQC["r2"]} \\
-HF183 Amplification Factor & \rinline{HF.Efficiency} & \rinline{HF.StdQC["eff"]} \\
-\hline
-\end{tabular}
-\end{center}
+%% begin.rcode echo=FALSE, results="asis"
+% print(xtable(results()$stdTable), include.rownames=FALSE, sanitize.text.function=function(x){x})
+%% end.rcode
 
 %----------------------------------------------------------------------------
 
@@ -54,41 +47,41 @@ Both the NTCs (qPCR blanks) and NECs (extraction blanks) must be non-detects. De
 in any replicates will cause these tests to fail. \\
 
 %% begin.rcode echo=FALSE, results="asis"
-% print(xtable(controlsDF), include.rownames=FALSE, sanitize.text.function=function(x){x})
+% print(xtable(results()$controlsDF), include.rownames=FALSE, sanitize.text.function=function(x){x})
 %% end.rcode
 %----------------------------------------------------------------------------
 \pagebreak
 \section{Sample Processing and Inhibition Control QC Results} 
 \subsection{Sketa}
-The mean sketa control Ct (i.e., the NEC) on this plate was \rinline{sk.calibrator} with
-a standard deviation of \rinline{Ct.sk.sd}. In order to pass,
+The mean sketa control Ct (i.e., the NEC) on this plate was \rinline{results()$sk.calibrator} with
+a standard deviation of \rinline{results()$Ct.sk.sd}. In order to pass,
 the difference between the mean sample sketa Ct ($\text{sketaCt}_{mean}$) and the NEC Ct (i.e., $\Delta \text{Ct}_{mean}$)
-must be less than \rinline{thres}. Note that the threshold level and pass/fail designations assume that the sample has not
+must be less than \rinline{results()$thres}. Note that the threshold level and pass/fail designations assume that the sample has not
 been diluted. \\
 
 
 %% begin.rcode echo=FALSE, results="asis"
-% print(xtable(sketaDataTrim), include.rownames=FALSE, sanitize.text.function=function(x){x})
+% print(xtable(results()$sketaDataTrim), include.rownames=FALSE, sanitize.text.function=function(x){x})
 %% end.rcode
 \pagebreak
 \subsection{IAC}
 
-The mean Ct of the internal amplication controls (IAC) unaffected by inhibition on this plate was \rinline{mean(ROQ)}, 
-and the accetable inhibition threshold is a Ct of \rinline{IACinterference}. IAC reactions with Cts greater than this value are 
+The mean Ct of the internal amplication controls (IAC) unaffected by inhibition on this plate was \rinline{mean(results()$ROQ)}, 
+and the accetable inhibition threshold is a Ct of \rinline{results()$IACinterference}. IAC reactions with Cts greater than this value are 
 considered to be inhibited. However, Ct increases can also be caused by competition in the multiplex reaction if the 
 quantity of sample DNA is high. Failing IACs are marked to denote competition effects if the sample HF183 Ct was less
-than \rinline{IACcompetition}, which is the competition threshold determined based on the calibration curve on this plate.
+than \rinline{results()$IACcompetition}, which is the competition threshold determined based on the calibration curve on this plate.
 
 
 %% begin.rcode echo=FALSE, results="asis"
-% print(xtable(IACinhib), include.rownames=FALSE, sanitize.text.function=function(x){x})
+% print(xtable(results()$IACinhib), include.rownames=FALSE, sanitize.text.function=function(x){x})
 %% end.rcode
 
 The Ct values of IAC in the NEC wells should be similar to the uninhibited IAC value reported above. Large deviations
 are indicative of problems with the IAC.
 
 %% begin.rcode echo=FALSE, results="asis"
-% print(xtable(IACNEC), include.rownames=FALSE, sanitize.text.function=function(x){x})
+% print(xtable(results()$IACNEC), include.rownames=FALSE, sanitize.text.function=function(x){x})
 %% end.rcode
 
 %----------------------------------------------------------------------------
@@ -100,14 +93,14 @@ in the following way:
 
 $$ \log_{10}{CN} = \frac{\text{Ct}_{samp} - yint}{slope} $$
 
-where $slope$ is the slope of the HF183 standard curve (\rinline{HF.Slope} for this plate),
+where $slope$ is the slope of the HF183 standard curve (\rinline{results()$HF.Slope} for this plate),
 $yint$ is the y-intercept of the HF183 standard curve. These values are then transformed to CN per filter (assumed to be 100 ml), and are reported below.
 Samples that failed either Sketa or IAC controls are labeled as "inhibited". Uninhibited CN estimates that are below the detection 
-limit (set to a Ct of \rinline{m}) are denoted by ``ND''. Any detected inhibition among sample replicates causes the mean
+limit (set to a Ct of \rinline{results()$m}) are denoted by ``ND''. Any detected inhibition among sample replicates causes the mean
 to be labeled as ``inhibited''. Remember that these CN estimates are reported on a logarithmic scale. \\
 
 %% begin.rcode echo=FALSE, results="asis", warnings=FALSE
-% print(xtable(resultsTrim2), include.rownames=FALSE, sanitize.text.function=function(x){x}, floating=FALSE, scale=.75)
+% print(xtable(results()$resultsTrim2), include.rownames=FALSE, sanitize.text.function=function(x){x}, floating=FALSE, scale=.75)
 %% end.rcode
 
 \end{document}

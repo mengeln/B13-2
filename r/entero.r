@@ -1,6 +1,6 @@
 source("r/helpers.r")
 
-ent <- function (samplefile, format, org) {
+ent <- function (samplefile, sketafile, format, org) {
 
   
   # Read in data
@@ -70,16 +70,13 @@ ent <- function (samplefile, format, org) {
   })
   
   # Inhibited flag
-  result$log10cellPer100ml[result$Inhibition == "FAIL"] <- "inhibited"
   
   resultsTrim <- subset(result, select = c(Sample, Target, Cq, log10cellPer100ml, Mean))
   names(resultsTrim)[3:4] <- c("Ct", "log10")
   resultsTrim[resultsTrim$Ct == m, c("Ct", "Mean", "log10")] <- "N/A"
   
   resultsTrim <- ddply(resultsTrim, .(Sample), function(df){
-    df$Replicate <- 1:nrow(df)
-    if(any(df$log10 == "inhibited"))
-      df$Mean[!is.na(df$Mean)] <- "inhibited" 
+    df$Replicate <- 1:nrow(df) 
     df
   })
   resultsTrim <- dcast(melt(resultsTrim,

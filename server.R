@@ -9,6 +9,7 @@ library(shiny)
 library(knitr)
 library(xtable)
 source("r/entero.r")
+source("r/hf183.r")
 
 
 shinyServer(function(input, output) {
@@ -20,7 +21,9 @@ shinyServer(function(input, output) {
       processor <- get(input$Assay)
       
       # Process data  
-      result <- try(processor(input$data_file$datapath, input$plat, input$org))
+      result <- try(processor(input$data_file$datapath,
+                              input$sketa_file, input$plat,
+                              input$org))
       success <- class(result) != "try-error"
       # Store file
       if(input$db & success){

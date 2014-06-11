@@ -1,45 +1,89 @@
 source("r/helpers.r")
 
-hf183 <- function (samplefile, sketafile) {
-  
-  eff.max <- 2.1
-  eff.min <- 1.87
-  r2.min <- 0.98
-  m <- 45  # Ct to assign to unamplified wells
-  thres <- 3.0 # sketa sample processing control failure threshold
+hf <- function (samplefile, sketafile, format, org) {
+
   
   # Read in data
-  sampledata <- readAndClean(samplefile)
-  sketadata <- readAndClean(sketafile)
+  sampledata <- readAndClean(samplefile, format)
+  sketaData <- readAndClean(sketafile$datapath, format)
+  metadata <- getMeta(samplefile, format)
   
   # Subset by target
-  hf183Data <- sampledata[sampledata$Target == "hf183", ]
+  HFData <- sampledata[sampledata$Target == "hf183", ]
   IACdata <- sampledata[sampledata$Target == "iac", ]
   
   
-  ### Standard Curve QC ###
-  
-  # Build linear model
-  hf183Std <- hf183Data[grepl("Std", hf183Data$Content), ]
-  hf183Std$Log10CopyPeruL <- log10(as.numeric(hf183Std$CopyPeruL)) 
-  hf183Model <- lm(data = hf183Std,  Cq ~ Log10CopyPeruL)
+  # Standard Curve
 
+  HFStandard <- HFData[grepl("Std", HFData$Content), ]
+  HFStandard$Log10CopyPeruL <- log10(as.numeric(HFStandard$CopyPeruL)) 
+  
+  HF.model <- lm(data = HFStandard,  Cq ~ Log10CopyPeruL) # create standard curve model
+  HF.yint <- coef(HF.model)[[1]]
+  HF.Slope <- coef(HF.model)[[2]]
+  HF.r2 <- summary(HF.model)$r.squared
+  HF.Efficiency <- 10^(-1/HF.Slope)
+  
+  
   # Make report 
-  stdReport <- standardQC(10^(-1/coef(hf183Model )[[2]]),
-                         summary(HF.model)$r.squared,
-                         "HF183")
+  stdReport <- standardQC(10^(-1/coef(HF.model)[[2]]),
+                             summary(HF.model)$r.squared,
+                             "HF183")
   
-  ### Negative Controls QC ###
-
-  controlDF <- controlFrame(hf183Data, "HF183")
+  # Controls
+  controlFrame <- function (data, assay) {
+    data$Sample <- toupper(data$Sample)
+    cData <- data[grepl("NTC|NEC", data$Sample),] 
+    cData <- ddply(cData, .(Sample), function(df){
+      df$Replicate <- paste0("Ct$_{Rep", 1:nrow(df), "}$")
+      df
+    })
+    controlDF <- dcast(cData, Sample ~ Replicate, value.var="Cq")
+    controlDF$"PASS?" <- apply(controlDF[, -1], 1, function(x)ifelse(all(x == m), "PASS", "FAIL"))
+    controlDF[controlDF ==m] <- "N/A"
+    controlDF$Assay <- assay
+    controlDF
+  }
+  controlDF <- controlFrame(HFData, "HF183")
   controlSk <- controlFrame(sketaData, "Sketa22")
-  controlsReport <- rbind(controlDF, controlSk[controlSk$Sample == "NTC",])
-
-  ### Sketa Inhibition QC ###
   
-  sketaQReport <- sketaQC(sketaData)
-
-  ### IAC Inhibition QC ###
+  controlsDF <- rbind(controlDF, controlSk[controlSk$Sample == "NTC",])
+  numCols <- ncol(controlsDF)
+  controlsDF <- controlsDF[, c(numCols, 1:(numCols - 1))]
+  
+  dbCtrl <- melt(controlsDF[, names(controlsDF) %nin% "PASS?"], id.vars=c("Assay", "Sample"))
+  dbCtrl$variable <- as.numeric(gsub(".*?Rep(\\d).*", "\\1", dbCtrl$variable))
+  names(dbCtrl)[names(dbCtrl) %in% c("Assay", "Sample", "variable", "value")] <- c("Target", "Type", "Rep", "Ct")
+  # Sketa Inhibition QC
+  
+  sketaQC <- function(data=sketaData, threshold=thres){
+    sk.unkn <- data[grepl("Unkn", data$Content), ]
+    calibrators <- sketaData$Cq[grepl("NEC", toupper(sketaData$Sample))]
+    Ct.sk.calibrator <- mean(calibrators)
+    Ct.sk.sd <<- sd(calibrators)
+    
+    sk.calibrator <<- Ct.sk.calibrator
+    sk.unkn$sk.dct <- sk.unkn$Cq - Ct.sk.calibrator
+    sk.unkn$Inhibition <- ifelse(sk.unkn$sk.dct > threshold | sk.unkn$sk.dct < (-threshold),  # need to update variable name to "SketaQC"
+                                 "FAIL", "PASS")
+    names(sk.unkn)[names(sk.unkn)=="Cq"] <- "sk.Ct"
+    sk.unkn
+  }
+  
+  sketaData <- sketaQC(sketaData)
+  
+  sketaDataTrim <- sketaData[, c("Sample", "sk.Ct", "sk.dct", "Inhibition")]
+  
+  sketaDataTrim <- ddply(sketaDataTrim, .(Sample), function(df){
+    data.frame(Sample = unique(df$Sample),
+               sk.Ct = mean(df$sk.Ct, na.rm=TRUE),
+               sk.dct = mean(df$sk.dct, na.rm=TRUE),
+               Inhibtion = ifelse(all(df$Inhibition == "PASS"), "PASS", "FAIL")
+    )
+  })
+  names(sketaDataTrim) <- c("Sample", "sketa Ct$_{mean}$", "$\\Delta$Ct$_{mean}$", "Pass?")
+  
+  # IAC Inhibition QC
   
   IACNEC <- IACdata[grepl("NEC", IACdata$Sample), c("Sample", "Cq")]
   names(IACNEC) <- c("IAC NEC", "Ct")
@@ -84,6 +128,10 @@ hf183 <- function (samplefile, sketafile) {
     
   }
   
+  HFData2 <- directCT(HFData)
+  if(nrow(HFData2) > 0) {
+    HFData2$Date <- metadata["Run Started"]
+  }
   
   
   
@@ -104,4 +152,45 @@ hf183 <- function (samplefile, sketafile) {
     if(any(inhibition))res$log10copiesPer100ml <- "inhibited"
     subset(res, select=-c(copiesPer100ml))
   }))
+  resultsTrim <- arrange(resultsTrim, Sample, Mean)
+  
+  names(resultsTrim)[3] <- c("Ct")
+  
+  rmelt <- melt(resultsTrim, id.vars=c("Sample", "Target", "Replicate"))
+  resultsTrim2 <- dcast(rmelt, Sample + Target  ~ Replicate + variable, value.var="value")
+  
+  resultsTrim2 <- resultsTrim2[, c("Sample", "Target", "1_Ct",
+                                   "2_Ct", "3_Ct", "1_log10copiesPer100ml",
+                                   "2_log10copiesPer100ml",
+                                   "3_log10copiesPer100ml",
+                                   "1_Mean")]
+  resultsTrim2[is.na(resultsTrim2$"1_Ct") & is.na(resultsTrim2$"2_Ct"), c("1_Mean")] <- "ND"
+  names(resultsTrim2) <- c("Sample", "Target",
+                           "Ct$_{Rep 1}$",
+                           "Ct$_{Rep 2}$",
+                           "Ct$_{Rep 3}$",
+                           "$\\log_{10}$ copies/100 \\si{\\milli\\litre}$_{Rep1}$",
+                           "$\\log_{10}$ copies/100 \\si{\\milli\\litre}$_{Rep2}$",
+                           "$\\log_{10}$ copies/100 \\si{\\milli\\litre}$_{Rep3}$",
+                           "Mean $\\log_{10}$ copies/100 \\si{\\milli\\litre}")
+  print(stdReport)
+  list(metadata=metadata,
+       org=org,
+       r2.min=r2.min,
+       eff.min=eff.min,
+       eff.max=eff.max,
+       stdTable = stdReport,
+       controlsDF=controlsDF,
+       sk.calibrator=sk.calibrator,
+       Ct.sk.sd=Ct.sk.sd,
+       thres=thres,
+       sketaDataTrim=sketaDataTrim,
+       ROQ=ROQ,
+       IACcompetition=IACcompetition,
+       IACinhib=IACinhib,
+       IACNEC=IACNEC,
+       HF.Slope=HF.Slope,
+       m=m,
+       resultsTrim2=resultsTrim2)
+  
 }
