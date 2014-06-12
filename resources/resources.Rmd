@@ -10,4 +10,4 @@
 
 * <a href="ent_sketa2.csv" target="_blank">CFX Entero TaqEnviron example</a>
 * <a href="hfdatafile.csv" target="_blank">CFX HF183 data file example</a>
-* <a href="hfsketafile.csv" target="_blank">CFX HF183 sketa file exaample</a>
+* <a href="hfsketafile.csv" target="_blank">CFX HF183 sketa file example</a>

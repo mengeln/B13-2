@@ -26,62 +26,23 @@ hf <- function (samplefile, sketafile, format, org) {
   
   
   # Make report 
-  stdReport <- standardQC(10^(-1/coef(HF.model)[[2]]),
-                             summary(HF.model)$r.squared,
-                             "HF183")
+  stdReport <- standardQC(HF.Efficiency,
+                          HF.r2,
+                          "HF183")
   
   # Controls
-  controlFrame <- function (data, assay) {
-    data$Sample <- toupper(data$Sample)
-    cData <- data[grepl("NTC|NEC", data$Sample),] 
-    cData <- ddply(cData, .(Sample), function(df){
-      df$Replicate <- paste0("Ct$_{Rep", 1:nrow(df), "}$")
-      df
-    })
-    controlDF <- dcast(cData, Sample ~ Replicate, value.var="Cq")
-    controlDF$"PASS?" <- apply(controlDF[, -1], 1, function(x)ifelse(all(x == m), "PASS", "FAIL"))
-    controlDF[controlDF ==m] <- "N/A"
-    controlDF$Assay <- assay
-    controlDF
-  }
+
   controlDF <- controlFrame(HFData, "HF183")
   controlSk <- controlFrame(sketaData, "Sketa22")
   
   controlsDF <- rbind(controlDF, controlSk[controlSk$Sample == "NTC",])
-  numCols <- ncol(controlsDF)
-  controlsDF <- controlsDF[, c(numCols, 1:(numCols - 1))]
-  
-  dbCtrl <- melt(controlsDF[, names(controlsDF) %nin% "PASS?"], id.vars=c("Assay", "Sample"))
-  dbCtrl$variable <- as.numeric(gsub(".*?Rep(\\d).*", "\\1", dbCtrl$variable))
-  names(dbCtrl)[names(dbCtrl) %in% c("Assay", "Sample", "variable", "value")] <- c("Target", "Type", "Rep", "Ct")
+
   # Sketa Inhibition QC
   
-  sketaQC <- function(data=sketaData, threshold=thres){
-    sk.unkn <- data[grepl("Unkn", data$Content), ]
-    calibrators <- sketaData$Cq[grepl("NEC", toupper(sketaData$Sample))]
-    Ct.sk.calibrator <- mean(calibrators)
-    Ct.sk.sd <<- sd(calibrators)
-    
-    sk.calibrator <<- Ct.sk.calibrator
-    sk.unkn$sk.dct <- sk.unkn$Cq - Ct.sk.calibrator
-    sk.unkn$Inhibition <- ifelse(sk.unkn$sk.dct > threshold | sk.unkn$sk.dct < (-threshold),  # need to update variable name to "SketaQC"
-                                 "FAIL", "PASS")
-    names(sk.unkn)[names(sk.unkn)=="Cq"] <- "sk.Ct"
-    sk.unkn
-  }
+  NECmean <- mean(sketaData$Cq[grepl("NEC", sketaData$Sample)], na.rm=TRUE)
+  sk.calibrator <- sd(sketaData$Cq[grepl("NEC", sketaData$Sample)], na.rm=TRUE)
   
-  sketaData <- sketaQC(sketaData)
-  
-  sketaDataTrim <- sketaData[, c("Sample", "sk.Ct", "sk.dct", "Inhibition")]
-  
-  sketaDataTrim <- ddply(sketaDataTrim, .(Sample), function(df){
-    data.frame(Sample = unique(df$Sample),
-               sk.Ct = mean(df$sk.Ct, na.rm=TRUE),
-               sk.dct = mean(df$sk.dct, na.rm=TRUE),
-               Inhibtion = ifelse(all(df$Inhibition == "PASS"), "PASS", "FAIL")
-    )
-  })
-  names(sketaDataTrim) <- c("Sample", "sketa Ct$_{mean}$", "$\\Delta$Ct$_{mean}$", "Pass?")
+  sketaQCReport <- sketaQC(sketaData)
   
   # IAC Inhibition QC
   
@@ -136,13 +97,15 @@ hf <- function (samplefile, sketafile, format, org) {
   
   
   ### Integrate results ###
-  result <- Reduce(function(x,y)merge(x,y, by="Sample"), list(HFData2, sketaDataTrim, IACinhib))
+  result <- Reduce(function(x,y)merge(x,y, by="Sample"), list(HFData2, sketaQCReport, IACinhib))
   
-  result$Competition <- result$"Pass?.y" == "FAIL" & result$Cq < IACcompetition  # need to modify in the future for accidental overdose of iac
+  result$Competition <- result$"Pass?" == "FAIL" & result$Cq < IACcompetition  # need to modify in the future for accidental overdose of iac
+  
   IACinhib$Competition <- ifelse(result$Competition[match(IACinhib$Sample, result$Sample)], "Yes", NA)
+  names(IACinhib)[3] <- "QC"
   
   resultsTrim <- rbind.fill(lapply(split(result, result$Sample), function(df){
-    inhibition <- !all(rbind(df$"Pass?.x" == "PASS", df$"Pass?.y" == "PASS")) & !df$Competition
+    inhibition <- !all(rbind(df$"QC" == "PASS", df$"Pass?" == "PASS")) & !df$Competition
     
     res <- df[, c("Sample", "Target", "Cq", "log10copiesPer100ml", "copiesPer100ml")]
     res$Mean <- NA
@@ -173,24 +136,30 @@ hf <- function (samplefile, sketafile, format, org) {
                            "$\\log_{10}$ copies/100 \\si{\\milli\\litre}$_{Rep2}$",
                            "$\\log_{10}$ copies/100 \\si{\\milli\\litre}$_{Rep3}$",
                            "Mean $\\log_{10}$ copies/100 \\si{\\milli\\litre}")
-  print(stdReport)
-  list(metadata=metadata,
-       org=org,
-       r2.min=r2.min,
-       eff.min=eff.min,
-       eff.max=eff.max,
+  
+  list(metadata = metadata, #misc
+       org = org,
+       
+       r2.min = r2.min, # globals
+       eff.min = eff.min,
+       eff.max = eff.max,
+       m = m,
+       thres = thres,
+       
        stdTable = stdReport,
-       controlsDF=controlsDF,
-       sk.calibrator=sk.calibrator,
-       Ct.sk.sd=Ct.sk.sd,
-       thres=thres,
-       sketaDataTrim=sketaDataTrim,
-       ROQ=ROQ,
-       IACcompetition=IACcompetition,
-       IACinhib=IACinhib,
-       IACNEC=IACNEC,
-       HF.Slope=HF.Slope,
-       m=m,
-       resultsTrim2=resultsTrim2)
+       HF.Slope = HF.Slope, #HF model
+       
+       controlsDF=controlsDF, # negative controls
+       
+       Ct.sk.sd = sk.calibrator, # sketa
+       sk.calibrator = NECmean,
+       sketaDataTrim = sketaQCReport,
+          
+       ROQ = ROQ, # competition
+       IACcompetition = IACcompetition,
+       IACinhib = IACinhib,
+       IACNEC = IACNEC,
+       
+       resultsTrim2 = resultsTrim2)
   
 }

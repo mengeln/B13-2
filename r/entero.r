@@ -69,7 +69,7 @@ ent <- function (samplefile, sketafile, format, org) {
     df
   })
   
-  # Inhibited flag
+  # Clean up results
   
   resultsTrim <- subset(result, select = c(Sample, Target, Cq, log10cellPer100ml, Mean))
   names(resultsTrim)[3:4] <- c("Ct", "log10")
