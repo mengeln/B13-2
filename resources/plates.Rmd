@@ -1,11 +1,12 @@
 ### CFX Plate Setup Templates
 
-* <a href="http://data.sccwrp.org/qpcr/plate_setup/bight13_Entero%20plate%20setup.pltd" target="_blank">CFX Entero TaqEnviron template</a>
+* <a href="ent_plate_setup.pltd" target="_blank">CFX Entero TaqEnviron template</a>
+* <a href="20140612 HF183 bight 13.pltd" target="_blank">CFX HF183 sample plate template</a>
+* <a href="20140612 Sketa for HF183 Bight 13.pltd" target="_blank">CFX HF183 Sketa plate template</a>
 
 ### ABI Step-One Plus Plate Setup Templates
 
-* <a href="http://data.sccwrp.org/qpcr/plate_setup/ABI_StepOne_Bight13_Enterococcus_Plate_Template.eds" target="_blank">ABI Step-One Plus Entero TaqEnviron template</a>
+
 
 ### ABI 7500 Fast Plate Setup Templates
 
-* <a href="http://data.sccwrp.org/qpcr/plate_setup/7500%20EnteroTaqEnviron%20Template.edt" target="_blank">ABI 7500 Entero TaqEnviron template</a>

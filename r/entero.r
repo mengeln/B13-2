@@ -42,7 +42,7 @@ ent <- function (samplefile, sketafile, format, org) {
   
   ### Sketa Inhibition QC ###
   NECmean <- mean(sketaData$Cq[grepl("NEC", sketaData$Sample)], na.rm=TRUE)
-  calibratorQC <- data.frame(CalibratorCt = sketaData$Cq[grepl("calibrator", sketaData$Sample)])
+  calibratorQC <- data.frame(CalibratorCt = sketaData$Cq[which(sketaData$CopyPeruL == sketaCal)])
   calibratorQC$delta <- calibratorQC$CalibratorCt - NECmean
   calibratorQC$PASS <- ifelse(calibratorQC$delta > thres | calibratorQC$delta < (-thres), "FAIL", "PASS")
   names(calibratorQC) <- c("Calibrator Ct", "$\\Delta$ Ct", "QC")
@@ -51,8 +51,8 @@ ent <- function (samplefile, sketafile, format, org) {
 
   # Ct to copy number (dct quantification model)
   
-  dct <- function(data, mlFiltered=100, cal=1e5){
-    Ct.ent.calibrator <- mean(data$Cq[data$Sample == "calibrator"])
+  dct <- function(data, mlFiltered=100, cal=1e4){
+    Ct.ent.calibrator <- mean(enteroStd$Cq[enteroStd$CopyPeruL == cal])
 
     data$ent.dct <- data$Cq - Ct.ent.calibrator
     data$log10cellPerFilter <- data$ent.dct/coef(enteroModel)[[2]]  + log10(cal)
@@ -61,7 +61,7 @@ ent <- function (samplefile, sketafile, format, org) {
     data[!grepl("Std", data$Content), ]
     
   }
-
+  
   entData <- dct(enteroData)
   result  <- ddply(entData[entData$Content == "Unkn", ], .(Sample), function(df){
     Cqs <- df$cellPer100ml[df$Cq != m]
@@ -109,10 +109,10 @@ ent <- function (samplefile, sketafile, format, org) {
        controlsDF = controlsReport,
        NECmean = NECmean,
        calibratorQC = calibratorQC,
-       calSD = sd(calibratorQC$CalibratorCt),
+       calSD = sd(calibratorQC[, 1]),
        
        sketaDataTrim = sketaQCReport,
-       sk.calibrator =  mean(sketaData$Cq[sketaData$Sample == "calibrator"]),
+       sk.calibrator =  mean(calibratorQC[, 1]),
 
        resultsTrim2 = resultsTrim)
 }

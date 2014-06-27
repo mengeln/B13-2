@@ -10,8 +10,17 @@ eff.min <- 1.87
 r2.min <- 0.98
 m <- 45  # Ct to assign to unamplified wells
 thres <- 1.7 # inhibition threshold
+sketaCal <- 10
 
 `%nin%` <- Negate(`%in%`)
+
+errorBlock <- function(message, block){
+  test <- try(block)
+  if(class(test) == "try-error")
+    stop(message, call. = FALSE)
+  else
+    test
+}
 
 abiToCfx <- function (abiFile) {
   data <- read.csv(abiFile , skip =8)

@@ -1,0 +1,109 @@
+File Name,new ent template,,,,,
+Created By User,admin,,,,,
+Notes,20111110 plate 13 env mm MR/LS,,,,,
+ID,,,,,,
+Run Started,11/10/2011 12:34:47 PM UTC -08:00,,,,,
+Run Ended,11/10/2011 2:10:33 PM UTC -08:00,,,,,
+Sample Vol,25,,,,,
+Lid Temp,105,,,,,
+Protocol File Name,Sipp_Entero1A.prcl,,,,,
+Plate Setup File Name,LA rapid 2011 plate setup.pltd,,,,,
+Base Serial Number,CC011698,,,,,
+Optical Head Serial Number,785BR4301,,,,,
+CFX Manager Version,2.1.1022.0523. ,,,,,
+,,,,,,
+Well group,All Wells,,,,,
+Amplification step,4,,,,,
+Melt step,,,,,,
+,,,,,,
+,,,,,,
+Well,Fluor,Target,Content,Sample,Cq,Starting Quantity (SQ)
+A01,FAM,ent,Std,,23.27,1.00E+04
+A02,FAM,ent,Std,,23.27,1.00E+04
+A03,FAM,ent,Unkn,Sample1,26.65,N/A
+A04,FAM,ent,Unkn,Sample1,26.77,N/A
+A05,FAM,ent,Unkn,Sample9,29.8,N/A
+A06,FAM,ent,Unkn,Sample9,29.78,N/A
+A07,FAM,sketa,Std,calibrator,21.39,1.00E+04
+A08,FAM,sketa,Std,calibrator,21.39,1.00E+04
+A09,FAM,sketa,Unkn,Sample1,21.39,N/A
+A10,FAM,sketa,Unkn,Sample1,21.39,N/A
+A11,FAM,sketa,Unkn,Sample9,21.39,N/A
+A12,FAM,sketa,Unkn,Sample9,21.39,N/A
+B01,FAM,ent,Std,,24.21,1.00E+03
+B02,FAM,ent,Std,,24.21,1.00E+03
+B03,FAM,ent,Unkn,Sample2,26.65,N/A
+B04,FAM,ent,Unkn,Sample2,26.77,N/A
+B05,FAM,ent,Unkn,Sample10,29.8,N/A
+B06,FAM,ent,Unkn,Sample10,29.78,N/A
+B07,FAM,sketa,Std,,27.31,1.00E+03
+B08,FAM,sketa,Std,,27.31,1.00E+03
+B09,FAM,sketa,Unkn,Sample2,21.39,N/A
+B10,FAM,sketa,Unkn,Sample2,21.39,N/A
+B11,FAM,sketa,Unkn,Sample10,21.39,N/A
+B12,FAM,sketa,Unkn,Sample10,21.39,N/A
+C01,FAM,ent,Std,,29.66,1.00E+02
+C02,FAM,ent,Std,,30.01,1.00E+02
+C03,FAM,ent,Unkn,Sample3,26.65,N/A
+C04,FAM,ent,Unkn,Sample3,26.77,N/A
+C05,FAM,ent,Unkn,Sample11,29.8,N/A
+C06,FAM,ent,Unkn,Sample11,29.78,N/A
+C07,FAM,sketa,Std,,25.39,1.00E+02
+C08,FAM,sketa,Std,,25.39,1.00E+02
+C09,FAM,sketa,Unkn,Sample3,21.39,N/A
+C10,FAM,sketa,Unkn,Sample3,21.39,N/A
+C11,FAM,sketa,Unkn,Sample11,21.39,N/A
+C12,FAM,sketa,Unkn,Sample11,21.39,N/A
+D01,FAM,ent,Std,,33.33,1.00E+01
+D02,FAM,ent,Std,,33.22,1.00E+01
+D03,FAM,ent,Unkn,Sample4,26.65,N/A
+D04,FAM,ent,Unkn,Sample4,26.77,N/A
+D05,FAM,ent,Unkn,Sample12,29.8,N/A
+D06,FAM,ent,Unkn,Sample12,29.78,N/A
+D07,FAM,sketa,Std,,30.11,1.00E+01
+D08,FAM,sketa,Std,,30.11,1.00E+01
+D09,FAM,sketa,Unkn,Sample4,21.39,N/A
+D10,FAM,sketa,Unkn,Sample4,21.39,N/A
+D11,FAM,sketa,Unkn,Sample12,21.39,N/A
+D12,FAM,sketa,Unkn,Sample12,21.39,N/A
+E01,FAM,ent,NTC,NTC,N/A,N/A
+E02,FAM,ent,NTC,NTC,N/A,N/A
+E03,FAM,ent,Unkn,Sample5,26.65,N/A
+E04,FAM,ent,Unkn,Sample5,26.77,N/A
+E05,FAM,ent,Unkn,Sample13,29.8,N/A
+E06,FAM,ent,Unkn,Sample13,29.78,N/A
+E07,FAM,sketa,NTC,NTC,N/A,N/A
+E08,FAM,sketa,NTC,NTC,N/A,N/A
+E09,FAM,sketa,Unkn,Sample5,21.39,N/A
+E10,FAM,sketa,Unkn,Sample5,21.39,N/A
+E11,FAM,sketa,Unkn,Sample13,21.39,N/A
+E12,FAM,sketa,Unkn,Sample13,21.39,N/A
+F01,FAM,ent,Neg Ctrl,NEC,N/A,N/A
+F02,FAM,ent,Neg Ctrl,NEC,N/A,N/A
+F03,FAM,ent,Unkn,Sample6,26.65,N/A
+F04,FAM,ent,Unkn,Sample6,26.77,N/A
+F05,FAM,ent,Unkn,Sample14,29.8,N/A
+F06,FAM,ent,Unkn,Sample14,29.78,N/A
+F07,FAM,sketa,Neg Ctrl,NEC,21.39,N/A
+F08,FAM,sketa,Neg Ctrl,NEC,21.39,N/A
+F09,FAM,sketa,Unkn,Sample6,21.39,N/A
+F10,FAM,sketa,Unkn,Sample6,21.39,N/A
+F11,FAM,sketa,Unkn,Sample14,21.39,N/A
+F12,FAM,sketa,Unkn,Sample14,21.39,N/A
+G03,FAM,ent,Unkn,Sample7,26.65,N/A
+G04,FAM,ent,Unkn,Sample7,26.77,N/A
+G05,FAM,ent,Unkn,Sample15,29.8,N/A
+G06,FAM,ent,Unkn,Sample15,29.78,N/A
+G09,FAM,sketa,Unkn,Sample7,21.39,N/A
+G10,FAM,sketa,Unkn,Sample7,21.39,N/A
+G11,FAM,sketa,Unkn,Sample15,21.39,N/A
+G12,FAM,sketa,Unkn,Sample15,21.39,N/A
+H03,FAM,ent,Unkn,Sample8,26.65,N/A
+H04,FAM,ent,Unkn,Sample8,26.77,N/A
+H05,FAM,ent,Unkn,Sample16,29.8,N/A
+H06,FAM,ent,Unkn,Sample16,29.78,N/A
+H09,FAM,sketa,Unkn,Sample8,21.39,N/A
+H10,FAM,sketa,Unkn,Sample8,21.39,N/A
+H11,FAM,sketa,Unkn,Sample16,21.39,N/A
+H12,FAM,sketa,Unkn,Sample16,21.39,N/A
+
